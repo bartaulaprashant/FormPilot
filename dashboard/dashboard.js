@@ -1,78 +1,105 @@
 
 import { openDatabase } from "../database/db.js";
-
 import {
   getProfile,
   saveProfile
 } from "../database/repositories/profile.repository.js";
 
-import {
-  educationRepository
-} from "../database/repositories/education.repository.js";
+const profileForm = document.querySelector("#profile-form");
+const formStatus = document.querySelector("#form-status");
 
-import {
-  settingsRepository
-} from "../database/repositories/settings.repository.js";
+function populateForm(profile) {
+  if (!profile) return;
 
-async function testDatabase() {
-  try {
-    await openDatabase();
+  const fields = {
+    ...profile,
+    currentStreet: profile.address?.current?.street,
+    currentCity: profile.address?.current?.city,
+    currentProvince: profile.address?.current?.province,
+    currentCountry: profile.address?.current?.country,
+    permanentStreet: profile.address?.permanent?.street,
+    permanentCity: profile.address?.permanent?.city,
+    permanentProvince: profile.address?.permanent?.province,
+    permanentCountry: profile.address?.permanent?.country,
+    portfolio: profile.links?.portfolio,
+    linkedin: profile.links?.linkedin,
+    github: profile.links?.github
+  };
 
-    // Profile
-    await saveProfile({
-      firstName: "John",
-      lastName: "Doe",
-      email: "john@example.com"
-    });
+  for (const [name, value] of Object.entries(fields)) {
+    const input = profileForm.elements.namedItem(name);
 
-    console.log("Profile:", await getProfile());
-
-    // Education
-    const education = await educationRepository.create({
-      institution: "Tribhuvan University",
-      degree: "BSc CSIT",
-      endDate: "2026"
-    });
-
-    console.log("Created education:", education);
-
-    console.log(
-      "All education:",
-      await educationRepository.getAll()
-    );
-
-    // Update
-    const updatedEducation = {
-      ...education,
-      degree: "Bachelor of Science in Computer Science"
-    };
-
-    await educationRepository.update(updatedEducation);
-
-    console.log(
-      "Updated education:",
-      await educationRepository.get(education.id)
-    );
-
-    // Settings
-    await settingsRepository.set("autofillEnabled", true);
-
-    console.log(
-      "Setting:",
-      await settingsRepository.get("autofillEnabled")
-    );
-
-    // Delete test record
-    await educationRepository.remove(education.id);
-
-    console.log(
-      "Remaining education:",
-      await educationRepository.getAll()
-    );
-
-  } catch (error) {
-    console.error("Database test failed:", error);
+    if (input && typeof value === "string") {
+      input.value = value;
+    }
   }
 }
 
-testDatabase();
+function getFormData() {
+  const formData = new FormData(profileForm);
+  const data = Object.fromEntries(formData.entries());
+
+  return {
+    firstName: data.firstName,
+    middleName: data.middleName,
+    lastName: data.lastName,
+    email: data.email,
+    phone: data.phone,
+    alternatePhone: data.alternatePhone,
+    dateOfBirth: data.dateOfBirth,
+
+    address: {
+      current: {
+        street: data.currentStreet,
+        city: data.currentCity,
+        province: data.currentProvince,
+        country: data.currentCountry
+      },
+      permanent: {
+        street: data.permanentStreet,
+        city: data.permanentCity,
+        province: data.permanentProvince,
+        country: data.permanentCountry
+      }
+    },
+
+    links: {
+      portfolio: data.portfolio,
+      linkedin: data.linkedin,
+      github: data.github
+    },
+
+    summary: data.summary
+  };
+}
+
+async function initializeDashboard() {
+  try {
+    await openDatabase();
+
+    const profile = await getProfile();
+    populateForm(profile);
+
+  } catch (error) {
+    console.error("Dashboard initialization failed:", error);
+    formStatus.textContent = "Failed to load profile.";
+  }
+}
+
+profileForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  try {
+    const profileData = getFormData();
+
+    await saveProfile(profileData);
+
+    formStatus.textContent = "Profile saved successfully.";
+
+  } catch (error) {
+    console.error("Profile save failed:", error);
+    formStatus.textContent = "Failed to save profile.";
+  }
+});
+
+initializeDashboard();

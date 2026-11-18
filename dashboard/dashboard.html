@@ -3,23 +3,108 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>FormPilot Dashboard</title>
+  <title>FormPilot — Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css">
 </head>
-
 <body>
+  <main class="dashboard">
+    <header class="page-header">
+      <h1>Personal Profile</h1>
+      <p>Manage the information FormPilot uses to fill out forms.</p>
+    </header>
 
-  <header>
-    <h1>FormPilot Dashboard</h1>
-    <p>Manage your personal information.</p>
-  </header>
+    <form id="profile-form">
+      <section class="form-section">
+        <h2>Basic Information</h2>
 
-  <main>
-    <h2>Welcome to FormPilot</h2>
-    <p>Your information management system will appear here.</p>
+        <div class="form-grid">
+          <label>First name
+            <input name="firstName" type="text">
+          </label>
+          <label>Middle name
+            <input name="middleName" type="text">
+          </label>
+          <label>Last name
+            <input name="lastName" type="text">
+          </label>
+          <label>Email
+            <input name="email" type="email">
+          </label>
+          <label>Phone
+            <input name="phone" type="tel">
+          </label>
+          <label>Alternate phone
+            <input name="alternatePhone" type="tel">
+          </label>
+          <label>Date of birth
+            <input name="dateOfBirth" type="date">
+          </label>
+        </div>
+      </section>
+
+      <section class="form-section">
+        <h2>Address</h2>
+
+        <h3>Current address</h3>
+        <div class="form-grid">
+          <label>Street
+            <input name="currentStreet">
+          </label>
+          <label>City
+            <input name="currentCity">
+          </label>
+          <label>Province
+            <input name="currentProvince">
+          </label>
+          <label>Country
+            <input name="currentCountry">
+          </label>
+        </div>
+
+        <h3>Permanent address</h3>
+        <div class="form-grid">
+          <label>Street
+            <input name="permanentStreet">
+          </label>
+          <label>City
+            <input name="permanentCity">
+          </label>
+          <label>Province
+            <input name="permanentProvince">
+          </label>
+          <label>Country
+            <input name="permanentCountry">
+          </label>
+        </div>
+      </section>
+
+      <section class="form-section">
+        <h2>Online Presence</h2>
+        <div class="form-grid">
+          <label>Portfolio
+            <input name="portfolio" type="url">
+          </label>
+          <label>LinkedIn
+            <input name="linkedin" type="url">
+          </label>
+          <label>GitHub
+            <input name="github" type="url">
+          </label>
+        </div>
+      </section>
+
+      <section class="form-section">
+        <h2>Professional Summary</h2>
+        <textarea name="summary" rows="5"></textarea>
+      </section>
+
+      <div class="form-actions">
+        <p id="form-status" role="status"></p>
+        <button type="submit">Save Profile</button>
+      </div>
+    </form>
   </main>
 
-
-  <script src="./dashboard.js" type="module"></script>
+  <script type="module" src="dashboard.js"></script>
 </body>
 </html>
