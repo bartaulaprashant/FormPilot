@@ -8,7 +8,7 @@ import {
 let dbInstance = null;
 
 export function openDatabase() {
-  if (dbInstance) {
+  if (dbInstance) { 
     return Promise.resolve(dbInstance);
   }
 
@@ -76,3 +76,80 @@ export async function closeDatabase() {
     dbInstance = null;
   }
 }
+
+
+function executeTransaction(storeName, mode, operation) {
+  return getDatabase().then((db) => {
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(storeName, mode);
+      const store = transaction.objectStore(storeName);
+
+      let result;
+
+      try {
+        const request = operation(store);
+
+        if (request) {
+          request.onsuccess = () => {
+            result = request.result;
+          };
+        }
+      } catch (error) {
+        reject(error);
+        return;
+      }
+
+      transaction.oncomplete = () => {
+        resolve(result);
+      };
+
+      transaction.onabort = () => {
+        reject(
+          transaction.error ||
+          new Error("Database transaction aborted.")
+        );
+      };
+    });
+  });
+}
+
+export function addRecord(storeName, data) {
+  return executeTransaction(
+    storeName,
+    "readwrite",
+    (store) => store.add(data)
+  );
+}
+
+export function getRecord(storeName, key) {
+  return executeTransaction(
+    storeName,
+    "readonly",
+    (store) => store.get(key)
+  );
+}
+
+export function getAllRecords(storeName) {
+  return executeTransaction(
+    storeName,
+    "readonly",
+    (store) => store.getAll()
+  );
+}
+
+export function updateRecord(storeName, data) {
+  return executeTransaction(
+    storeName,
+    "readwrite",
+    (store) => store.put(data)
+  );
+}
+
+export function deleteRecord(storeName, key) {
+  return executeTransaction(
+    storeName,
+    "readwrite",
+    (store) => store.delete(key)
+  );
+}
+
