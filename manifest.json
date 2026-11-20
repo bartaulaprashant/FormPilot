@@ -1,22 +1,19 @@
+
 {
   "manifest_version": 3,
   "name": "FormPilot",
   "version": "1.0.0",
   "description": "Manage personal information and intelligently autofill online forms.",
-
   "permissions": [
     "activeTab",
     "scripting"
   ],
-
   "background": {
     "service_worker": "background/service-worker.js",
     "type": "module"
   },
-
   "action": {
     "default_popup": "popup/popup.html"
   },
-
   "options_page": "dashboard/dashboard.html"
 }

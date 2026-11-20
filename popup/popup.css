@@ -1,14 +1,98 @@
-body {
-  width: 280px;
-  padding: 16px;
-  font-family: Arial, sans-serif;
+
+* {
+  box-sizing: border-box;
 }
 
-main {
-  text-align: center;
+body {
+  width: 340px;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: #20242c;
+}
+
+.popup {
+  padding: 20px;
+}
+
+header {
+  margin-bottom: 20px;
+}
+
+header h1 {
+  margin: 0 0 5px;
+  font-size: 22px;
+}
+
+header p {
+  margin: 0;
+  color: #777;
+  font-size: 13px;
 }
 
 button {
-  padding: 10px 16px;
+  width: 100%;
+  padding: 11px;
+  border: none;
+  border-radius: 6px;
+  background: #776b5d;
+  color: white;
+  font-weight: 600;
   cursor: pointer;
+}
+
+button:hover {
+  background: #62584d;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.secondary {
+  margin-top: 15px;
+  background: #ece9e5;
+  color: #51483e;
+}
+
+.secondary:hover {
+  background: #ded9d2;
+}
+
+#scan-status {
+  margin: 12px 0;
+  font-size: 13px;
+  color: #555;
+}
+
+#results-section {
+  margin-top: 18px;
+}
+
+#results-section h2 {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+#field-count {
+  color: #777;
+  font-size: 12px;
+}
+
+.field-item {
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.field-item strong {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.field-item p {
+  margin: 0;
+  color: #777;
+  font-size: 11px;
+  overflow-wrap: anywhere;
 }
