@@ -21,13 +21,11 @@ scanButton.addEventListener("click", async () => {
       throw new Error("No active tab found.");
     }
 
-    // Inject the detector into the active tab.
     await chrome.scripting.executeScript({
       target: { tabId: tab.id },
       files: ["content/detector.js"]
     });
 
-    // Request a scan from the injected detector.
     const response = await chrome.tabs.sendMessage(tab.id, {
       type: "FORMPILOT_SCAN"
     });
@@ -36,46 +34,72 @@ scanButton.addEventListener("click", async () => {
       throw new Error(response?.error || "Unable to scan page.");
     }
 
-    displayResults(response.fields);
+    scanStatus.textContent = "Matching detected fields...";
+
+    const matchResponse = await chrome.runtime.sendMessage({
+      type: "GET_FIELD_MATCHES",
+      fields: response.fields
+    });
+
+    if (!matchResponse?.success) {
+      throw new Error(matchResponse?.error || "Matching failed.");
+    }
+
+    displayResults(matchResponse.matches);
 
     scanStatus.textContent = `Scanned: ${response.title}`;
 
   } catch (error) {
-    console.error("Form scan failed:", error);
+    console.error("FormPilot scan failed:", error);
     scanStatus.textContent =
-      "Could not scan this page. Try a normal website instead.";
+      "Could not scan or match this page. Check the console.";
   } finally {
     scanButton.disabled = false;
   }
 });
 
-function displayResults(fields) {
+function displayResults(matches) {
   fieldList.replaceChildren();
 
   resultsSection.hidden = false;
-  fieldCount.textContent = `${fields.length} fields detected`;
 
-  if (!fields.length) {
+  const matchedCount = matches.filter(item => item.match).length;
+
+  fieldCount.textContent =
+    `${matches.length} fields detected · ${matchedCount} matches found`;
+
+  if (!matches.length) {
     fieldList.textContent = "No supported form fields found.";
     return;
   }
 
-  fields.forEach(field => {
+  matches.forEach(result => {
     const item = document.createElement("div");
     item.className = "field-item";
 
     const title = document.createElement("strong");
-    title.textContent = field.label || field.name || field.id || "Unlabeled field";
+    title.textContent =
+      result.field.label ||
+      result.field.name ||
+      result.field.id ||
+      "Unlabeled field";
 
     const details = document.createElement("p");
     details.textContent = [
-      field.tagName,
-      field.type,
-      field.name ? `Name: ${field.name}` : "",
-      field.autocomplete ? `Autocomplete: ${field.autocomplete}` : ""
+      result.field.type,
+      result.field.name ? `Name: ${result.field.name}` : ""
     ].filter(Boolean).join(" · ");
 
-    item.append(title, details);
+    const suggestion = document.createElement("p");
+
+    if (result.match) {
+      suggestion.textContent =
+        `Suggested: ${result.match.value} (${result.match.source}) · ${result.confidence}% confidence`;
+    } else {
+      suggestion.textContent = "No matching information found.";
+    }
+
+    item.append(title, details, suggestion);
     fieldList.append(item);
   });
 }
