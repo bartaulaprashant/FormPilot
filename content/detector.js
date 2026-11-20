@@ -12,34 +12,52 @@ function isVisible(element) {
 }
 
 function getFieldLabel(element) {
-  // Explicitly associated label
+  // 1. Associated HTML label
   if (element.labels?.length) {
-    return [...element.labels]
+    const labels = [...element.labels]
       .map(label => label.innerText.trim())
-      .filter(Boolean)
-      .join(" ");
+      .filter(Boolean);
+
+    if (labels.length) return labels.join(" ");
   }
 
-  // ARIA label
+  // 2. ARIA label
   const ariaLabel = element.getAttribute("aria-label");
   if (ariaLabel) return ariaLabel.trim();
 
-  // ARIA labelled-by
+  // 3. ARIA labelledby
   const labelledBy = element.getAttribute("aria-labelledby");
 
   if (labelledBy) {
-    const labels = labelledBy
-      .split(/\s+/)
+    const labels = labelledBy.split(/\s+/)
       .map(id => document.getElementById(id)?.innerText.trim())
       .filter(Boolean);
 
     if (labels.length) return labels.join(" ");
   }
 
-  // Placeholder fallback
-  if (element.placeholder) return element.placeholder.trim();
+  // 4. Search nearby elements for a visual label
+  const parent = element.parentElement;
 
-  // Name or ID fallback
+  if (parent) {
+    const possibleLabels = parent.querySelectorAll(
+      "label, div, span, p"
+    );
+
+    for (const candidate of possibleLabels) {
+      if (candidate === element || candidate.contains(element)) {
+        continue;
+      }
+
+      const text = candidate.innerText?.trim();
+
+      if (text && text.length < 100) {
+        return text;
+      }
+    }
+  }
+
+  // 5. Fallback to name or ID
   return element.name || element.id || "";
 }
 
@@ -95,7 +113,6 @@ function detectFormFields() {
 
   return fields;
 }
-
 
 if (!globalThis.formPilotDetectorInstalled) {
   globalThis.formPilotDetectorInstalled = true;

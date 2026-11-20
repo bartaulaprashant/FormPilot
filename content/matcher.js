@@ -83,7 +83,7 @@ function getFieldText(field) {
     field.name,
     field.id,
     field.placeholder
-  ].join(" "));
+  ].filter(Boolean).join(" "));
 }
 
 function getFieldValue(data, path) {
