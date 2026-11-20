@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FormPilot — Skills</title>
+  <link rel="stylesheet" href="../dashboard.css">
+</head>
+<body>
+  <main class="dashboard">
+    <header class="page-header">
+      <h1>Skills</h1>
+      <p>Manage your technical and professional skills.</p>
+      <a href="../dashboard.html">← Back to Profile</a>
+    </header>
+
+    <section class="form-section">
+      <h2 id="form-heading">Add Skill</h2>
+
+      <form id="skill-form">
+        <input type="hidden" name="id">
+
+        <div class="form-grid">
+          <label>Skill Name
+            <input name="name" required placeholder="JavaScript">
+          </label>
+
+          <label>Category
+            <select name="category">
+              <option value="">Select category</option>
+              <option>Programming</option>
+              <option>Framework</option>
+              <option>Database</option>
+              <option>DevOps</option>
+              <option>Soft Skill</option>
+              <option>Other</option>
+            </select>
+          </label>
+
+          <label>Proficiency
+            <select name="proficiency">
+              <option value="">Select proficiency</option>
+              <option>Beginner</option>
+              <option>Intermediate</option>
+              <option>Advanced</option>
+              <option>Expert</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" id="submit-button">Add Skill</button>
+          <button type="button" id="cancel-edit" hidden>Cancel</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="form-section">
+      <h2>Your Skills</h2>
+      <div id="skill-list"></div>
+    </section>
+  </main>
+
+  <script type="module" src="skills.js"></script>
+</body>
+</html>

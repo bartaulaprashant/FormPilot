@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FormPilot — Experience</title>
+  <link rel="stylesheet" href="../dashboard.css">
+</head>
+<body>
+  <main class="dashboard">
+    <header class="page-header">
+      <h1>Experience</h1>
+      <p>Manage your professional work history.</p>
+      <a href="../dashboard.html">← Back to Profile</a>
+    </header>
+
+    <section class="form-section">
+      <h2 id="form-heading">Add Experience</h2>
+
+      <form id="experience-form">
+        <input type="hidden" name="id">
+
+        <div class="form-grid">
+          <label>Company
+            <input name="company" required>
+          </label>
+
+          <label>Position
+            <input name="position" required>
+          </label>
+
+          <label>Employment Type
+            <select name="employmentType">
+              <option value="">Select type</option>
+              <option>Full-time</option>
+              <option>Part-time</option>
+              <option>Internship</option>
+              <option>Contract</option>
+              <option>Freelance</option>
+              <option>Self-employed</option>
+            </select>
+          </label>
+
+          <label>Location
+            <input name="location">
+          </label>
+
+          <label>Start Date
+            <input name="startDate" type="date">
+          </label>
+
+          <label>End Date
+            <input name="endDate" type="date">
+          </label>
+        </div>
+
+        <label class="description-field">Description
+          <textarea name="description" rows="5"></textarea>
+        </label>
+
+        <label class="current-checkbox">
+          <input type="checkbox" name="isCurrent">
+          Currently working here
+        </label>
+
+        <div class="form-actions">
+          <button type="submit" id="submit-button">Add Experience</button>
+          <button type="button" id="cancel-edit" hidden>Cancel</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="form-section">
+      <h2>Your Experience</h2>
+      <div id="experience-list"></div>
+    </section>
+  </main>
+
+  <script type="module" src="experience.js"></script>
+</body>
+</html>

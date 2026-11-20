@@ -1,0 +1,71 @@
+
+.description-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.current-checkbox {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.current-checkbox input {
+  width: auto;
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+}
+
+#cancel-edit {
+  background: #777;
+}
+
+.education-item {
+  padding: 18px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.education-item:first-child {
+  padding-top: 0;
+}
+
+.education-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.education-item h3 {
+  margin: 0 0 6px;
+}
+
+.education-item p {
+  margin: 5px 0;
+  color: #626b78;
+  font-size: 14px;
+}
+
+.education-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.education-actions button {
+  padding: 8px 14px;
+}
+
+.delete-button {
+  background: #b64040;
+}
+
+.empty-state {
+  color: #777;
+  font-size: 14px;
+}
