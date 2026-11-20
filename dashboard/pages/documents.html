@@ -1,0 +1,51 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FormPilot — Documents</title>
+  <link rel="stylesheet" href="../dashboard.css">
+  <link rel="stylesheet" href="education.css">
+  <link rel="stylesheet" href="documents.css">
+</head>
+<body>
+  <main class="dashboard">
+    <header class="page-header">
+      <h1>Documents</h1>
+      <p>Upload and manage your personal documents.</p>
+      <a href="../dashboard.html">← Back to Profile</a>
+    </header>
+
+    <section class="form-section">
+      <h2>Upload Document</h2>
+
+      <form id="document-form">
+        <label>
+          Select File
+          <input
+            type="file"
+            name="document"
+            accept=".pdf,.png,.jpg,.jpeg,.webp"
+            required
+          >
+        </label>
+
+        <p class="upload-hint">
+          Supported formats: PDF, PNG, JPG, JPEG and WEBP.
+        </p>
+
+        <button type="submit" id="upload-button">Upload Document</button>
+        <p id="upload-status" role="status"></p>
+      </form>
+    </section>
+
+    <section class="form-section">
+      <h2>Your Documents</h2>
+      <div id="document-list"></div>
+    </section>
+  </main>
+
+  <script type="module" src="documents.js"></script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FormPilot — Custom Fields</title>
+  <link rel="stylesheet" href="../dashboard.css">
+  <link rel="stylesheet" href="education.css">
+</head>
+<body>
+  <main class="dashboard">
+    <header class="page-header">
+      <h1>Custom Fields</h1>
+      <p>Store additional information that doesn't fit into standard profile sections.</p>
+      <a href="../dashboard.html">← Back to Profile</a>
+    </header>
+
+    <section class="form-section">
+      <h2 id="form-heading">Add Custom Field</h2>
+
+      <form id="custom-field-form">
+        <input type="hidden" name="id">
+
+        <div class="form-grid">
+          <label>Field Label
+            <input name="label" required placeholder="Passport Number">
+          </label>
+
+          <label>Category
+            <select name="category">
+              <option value="">Select category</option>
+              <option>Personal</option>
+              <option>Professional</option>
+              <option>Identification</option>
+              <option>Contact</option>
+              <option>Other</option>
+            </select>
+          </label>
+
+          <label>Field Type
+            <select name="fieldType">
+              <option value="text">Text</option>
+              <option value="email">Email</option>
+              <option value="tel">Phone</option>
+              <option value="url">URL</option>
+              <option value="date">Date</option>
+            </select>
+          </label>
+
+          <label>Value
+            <input name="value" required placeholder="Enter value">
+          </label>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" id="submit-button">Add Field</button>
+          <button type="button" id="cancel-edit" hidden>Cancel</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="form-section">
+      <h2>Your Custom Fields</h2>
+      <div id="custom-field-list"></div>
+    </section>
+  </main>
+
+  <script type="module" src="custom-fields.js"></script>
+</body>
+</html>
