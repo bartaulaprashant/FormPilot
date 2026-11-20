@@ -9,62 +9,194 @@
   <link rel="stylesheet" href="education.css">
 </head>
 <body>
-  <main class="dashboard">
-    <header class="page-header">
-      <h1>Custom Fields</h1>
-      <p>Store additional information that doesn't fit into standard profile sections.</p>
-      <a href="../dashboard.html">← Back to Profile</a>
-    </header>
+  <div class="app-layout">
 
-    <section class="form-section">
-      <h2 id="form-heading">Add Custom Field</h2>
+    <aside class="sidebar">
+      <a href="../dashboard.html" class="brand">
+        <span class="brand-icon">F</span>
+        <span class="brand-name">FormPilot</span>
+      </a>
 
-      <form id="custom-field-form">
-        <input type="hidden" name="id">
+      <div class="sidebar-section">
+        <p class="sidebar-label">WORKSPACE</p>
 
-        <div class="form-grid">
-          <label>Field Label
-            <input name="label" required placeholder="Passport Number">
-          </label>
+        <nav class="sidebar-nav">
+          <a href="../dashboard.html" class="nav-link">
+            <span class="nav-icon">⌂</span>
+            Overview
+          </a>
+          <a href="../dashboard.html#profile-section" class="nav-link">
+            <span class="nav-icon">♙</span>
+            Personal Profile
+          </a>
+          <a href="education.html" class="nav-link">
+            <span class="nav-icon">▤</span>
+            Education
+          </a>
+          <a href="experience.html" class="nav-link">
+            <span class="nav-icon">▣</span>
+            Experience
+          </a>
+          <a href="skills.html" class="nav-link">
+            <span class="nav-icon">✳</span>
+            Skills
+          </a>
+          <a href="certifications.html" class="nav-link">
+            <span class="nav-icon">♧</span>
+            Certifications
+          </a>
+          <a href="custom-fields.html" class="nav-link active">
+            <span class="nav-icon">☷</span>
+            Custom Fields
+          </a>
+          <a href="documents.html" class="nav-link">
+            <span class="nav-icon">▧</span>
+            Documents
+          </a>
+        </nav>
+      </div>
 
-          <label>Category
-            <select name="category">
-              <option value="">Select category</option>
-              <option>Personal</option>
-              <option>Professional</option>
-              <option>Identification</option>
-              <option>Contact</option>
-              <option>Other</option>
-            </select>
-          </label>
+      <div class="sidebar-bottom">
+        <div class="privacy-card">
+          <span class="privacy-icon">◈</span>
+          <div>
+            <strong>Your data stays yours</strong>
+            <p>Stored securely on this device.</p>
+          </div>
+        </div>
+        <p class="sidebar-version">FORMPILOT · VERSION 1.0</p>
+      </div>
+    </aside>
 
-          <label>Field Type
-            <select name="fieldType">
-              <option value="text">Text</option>
-              <option value="email">Email</option>
-              <option value="tel">Phone</option>
-              <option value="url">URL</option>
-              <option value="date">Date</option>
-            </select>
-          </label>
+    <main class="main-content">
 
-          <label>Value
-            <input name="value" required placeholder="Enter value">
-          </label>
+      <header class="topbar">
+        <div class="breadcrumb">
+          <span>Workspace</span>
+          <span class="breadcrumb-separator">/</span>
+          <strong>Custom Fields</strong>
         </div>
 
-        <div class="form-actions">
-          <button type="submit" id="submit-button">Add Field</button>
-          <button type="button" id="cancel-edit" hidden>Cancel</button>
+        <div class="topbar-right">
+          <div class="local-status">
+            <span class="status-dot"></span>
+            Local storage
+          </div>
+          <div class="avatar">FP</div>
         </div>
-      </form>
-    </section>
+      </header>
 
-    <section class="form-section">
-      <h2>Your Custom Fields</h2>
-      <div id="custom-field-list"></div>
-    </section>
-  </main>
+      <div class="content-wrapper module-content">
+
+        <section class="module-header">
+          <div>
+            <p class="eyebrow">YOUR PROFESSIONAL PROFILE / 06</p>
+            <h1>Custom Fields</h1>
+            <p>
+              Store additional information that doesn't fit into standard profile sections.
+            </p>
+          </div>
+
+          <a href="#custom-field-form" class="primary-link">
+            + Add Custom Field
+          </a>
+        </section>
+
+        <div class="module-layout">
+
+          <section class="module-panel">
+            <div class="module-panel-heading">
+              <div class="module-heading-icon">☷</div>
+              <div>
+                <h2 id="form-heading">Add Custom Field</h2>
+                <p>Create a field for additional personal information.</p>
+              </div>
+            </div>
+
+            <form id="custom-field-form">
+
+              <input type="hidden" name="id">
+
+              <div class="module-form-grid">
+
+                <label>
+                  Field Label
+                  <input
+                    name="label"
+                    required
+                    placeholder="e.g. Passport Number"
+                  >
+                </label>
+
+                <label>
+                  Category
+                  <select name="category">
+                    <option value="">Select category</option>
+                    <option>Personal</option>
+                    <option>Professional</option>
+                    <option>Identification</option>
+                    <option>Contact</option>
+                    <option>Other</option>
+                  </select>
+                </label>
+
+                <label>
+                  Field Type
+                  <select name="fieldType">
+                    <option value="text">Text</option>
+                    <option value="email">Email</option>
+                    <option value="tel">Phone</option>
+                    <option value="url">URL</option>
+                    <option value="date">Date</option>
+                  </select>
+                </label>
+
+                <label>
+                  Value
+                  <input
+                    name="value"
+                    required
+                    placeholder="Enter value"
+                  >
+                </label>
+
+              </div>
+
+              <div class="module-form-actions">
+                <button type="submit" id="submit-button">
+                  Add Field <span>→</span>
+                </button>
+
+                <button type="button" id="cancel-edit" hidden>
+                  Cancel
+                </button>
+              </div>
+
+            </form>
+          </section>
+
+          <section class="module-panel">
+            <div class="module-panel-heading">
+              <div class="module-heading-icon records-icon">▤</div>
+              <div>
+                <h2>Your Custom Fields</h2>
+                <p>Your additional saved information.</p>
+              </div>
+            </div>
+
+            <div id="custom-field-list" class="records-list"></div>
+          </section>
+
+        </div>
+
+        <footer class="page-footer">
+          <span>FormPilot</span>
+          <span>Your information, organized your way.</span>
+        </footer>
+
+      </div>
+    </main>
+  </div>
 
   <script type="module" src="custom-fields.js"></script>
 </body>
