@@ -1,33 +1,78 @@
+
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FormPilot</title>
-    <link rel="stylesheet" href="popup.css" />
-  </head>
-  <body>
-    <main class="popup">
-      <header>
-        <h1>FormPilot</h1>
-        <p>Your personal autofill assistant</p>
-      </header>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FormPilot</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
 
-      <button id="scan-button">Scan Current Page</button>
+<body>
+  <main class="popup">
 
-      <p id="scan-status" role="status"></p>
+    <header class="popup-header">
+      <div class="brand">
+        <div class="brand-icon">F</div>
+        <div>
+          <h1>FormPilot</h1>
+          <p>Your personal autofill assistant</p>
+        </div>
+      </div>
 
-      <section id="results-section" hidden>
-        <h2>Detected Fields</h2>
-        <div id="field-count"></div>
-        <div id="field-list"></div>
+      <span class="version">BETA</span>
+    </header>
 
-        <button id="fill-button" hidden>Fill Selected Fields</button>
-      </section>
+    <section class="intro">
+      <p class="eyebrow">SMART AUTOFILL</p>
+      <h2>AI that understands context.</h2>
+      <p class="intro-description">
+        Find the right information and fill forms with confidence.
+      </p>
+    </section>
 
-      <button id="dashboard-button" class="secondary">Open Dashboard</button>
-    </main>
+    <button id="scan-button" class="scan-button">
+      <span class="scan-icon">⌕</span>
+      <span>Scan Current Page</span>
+    </button>
 
-    <script type="module" src="popup.js"></script>
-  </body>
+    <p id="scan-status" class="scan-status" role="status"></p>
+
+    <section id="results-section" class="results-section" hidden>
+
+      <div class="results-heading">
+        <div>
+          <p class="eyebrow">FORM ANALYSIS</p>
+          <h2>Autofill suggestions</h2>
+          <p id="field-count" class="field-count"></p>
+        </div>
+        <span class="results-icon">✦</span>
+      </div>
+
+      <div id="field-list" class="field-list"></div>
+
+      <button id="fill-button" class="fill-button" hidden>
+        Fill Selected Fields
+        <span>→</span>
+      </button>
+
+      <p class="privacy-note">
+        <span>●</span>
+        Your information stays on your device.
+      </p>
+
+    </section>
+
+    <footer class="popup-footer">
+      <button id="dashboard-button" class="dashboard-button">
+        <span>▦</span>
+        Open Dashboard
+        <span class="footer-arrow">↗</span>
+      </button>
+    </footer>
+
+  </main>
+
+  <script type="module" src="popup.js"></script>
+</body>
 </html>

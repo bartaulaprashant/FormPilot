@@ -23,6 +23,7 @@ function getFieldLabel(element) {
 
   // 2. ARIA label
   const ariaLabel = element.getAttribute("aria-label");
+
   if (ariaLabel) return ariaLabel.trim();
 
   // 3. ARIA labelledby
@@ -36,29 +37,68 @@ function getFieldLabel(element) {
     if (labels.length) return labels.join(" ");
   }
 
-  // 4. Search nearby elements for a visual label
-  const parent = element.parentElement;
-
-  if (parent) {
-    const possibleLabels = parent.querySelectorAll(
-      "label, div, span, p"
-    );
-
-    for (const candidate of possibleLabels) {
-      if (candidate === element || candidate.contains(element)) {
-        continue;
-      }
-
-      const text = candidate.innerText?.trim();
-
-      if (text && text.length < 100) {
-        return text;
-      }
+  function getText(candidate) {
+    if (
+      !candidate ||
+      candidate === element ||
+      candidate.contains(element) ||
+      candidate.querySelector("input, textarea, select")
+    ) {
+      return "";
     }
+
+    const text = candidate.innerText?.trim();
+
+    if (!text || text.length > 100) return "";
+
+    return text;
   }
 
-  // 5. Fallback to name or ID
+  // 4. Search preceding elements in nearby containers
+  let current = element;
+
+  for (let depth = 0; current && depth < 4; depth++) {
+    let sibling = current.previousElementSibling;
+
+    while (sibling) {
+      const semanticLabel = sibling.matches(
+        'label, [class*="label"], [id*="label"]'
+      )
+        ? sibling
+        : sibling.querySelector(
+            'label, [class*="label"], [id*="label"]'
+          );
+
+      if (semanticLabel) {
+        const text = getText(semanticLabel);
+        if (text) return text;
+      }
+
+      if (!sibling.querySelector("input, textarea, select")) {
+        const text = getText(sibling);
+        if (text) return text;
+      }
+
+      sibling = sibling.previousElementSibling;
+    }
+
+    current = current.parentElement;
+  }
+
+  // 5. Fallback
   return element.name || element.id || "";
+}
+
+function getSelectOptions(element) {
+  return [...element.options].map(option => ({
+    text: option.text.trim(),
+    value: option.value,
+    disabled: option.disabled,
+    selected: option.selected,
+    isPlaceholder:
+      option.value === "" ||
+      option.hasAttribute("data-placeholder")
+  }));
 }
 
 function detectFormFields() {
@@ -72,10 +112,12 @@ function detectFormFields() {
     if (!isVisible(element)) return;
     if (element.disabled || element.readOnly) return;
 
+    const tagName = element.tagName.toLowerCase();
+
     const type = (
-      element.tagName === "INPUT"
+      tagName === "input"
         ? element.type
-        : element.tagName.toLowerCase()
+        : tagName
     ).toLowerCase();
 
     const excludedTypes = [
@@ -92,21 +134,28 @@ function detectFormFields() {
 
     if (excludedTypes.includes(type)) return;
 
+    const isSelect = tagName === "select";
+
     fields.push({
       fieldIndex: index,
-      tagName: element.tagName.toLowerCase(),
+      tagName,
       type,
+
       name: element.name || "",
       id: element.id || "",
+
       label: getFieldLabel(element),
       placeholder: element.placeholder || "",
       autocomplete: element.autocomplete || "",
+
       required: element.required,
-      options: element.tagName === "SELECT"
-        ? [...element.options].map(option => ({
-            text: option.text.trim(),
-            value: option.value
-          })).filter(option => option.value !== "")
+
+      // Additional select information
+      isMultiple: isSelect ? element.multiple : false,
+      selectedValue: isSelect ? element.value : null,
+
+      options: isSelect
+        ? getSelectOptions(element)
         : []
     });
   });
@@ -117,8 +166,10 @@ function detectFormFields() {
 if (!globalThis.formPilotDetectorInstalled) {
   globalThis.formPilotDetectorInstalled = true;
 
-  chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.type === "FORMPILOT_SCAN") {
+  chrome.runtime.onMessage.addListener(
+    (message, sender, sendResponse) => {
+      if (message.type !== "FORMPILOT_SCAN") return;
+
       try {
         const fields = detectFormFields();
 
@@ -135,6 +186,5 @@ if (!globalThis.formPilotDetectorInstalled) {
         });
       }
     }
-  });
+  );
 }
-

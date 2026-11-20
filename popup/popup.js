@@ -1,13 +1,18 @@
+
 const scanButton = document.querySelector("#scan-button");
 const dashboardButton = document.querySelector("#dashboard-button");
 const scanStatus = document.querySelector("#scan-status");
 const resultsSection = document.querySelector("#results-section");
 const fieldCount = document.querySelector("#field-count");
 const fieldList = document.querySelector("#field-list");
+const fillButton = document.querySelector("#fill-button");
+
 let currentMatches = [];
 
+// Scan current webpage
 scanButton.addEventListener("click", async () => {
   scanButton.disabled = true;
+  scanButton.textContent = "Scanning...";
   scanStatus.textContent = "Scanning page...";
   resultsSection.hidden = true;
 
@@ -48,38 +53,41 @@ scanButton.addEventListener("click", async () => {
     displayResults(matchResponse.matches);
 
     resultsSection.hidden = false;
-
     scanStatus.textContent = `Scanned: ${response.title}`;
+
   } catch (error) {
     console.error("FormPilot scan failed:", error);
     scanStatus.textContent =
       "Could not scan or match this page. Check the console.";
+
   } finally {
     scanButton.disabled = false;
+    scanButton.innerHTML = `
+      <span class="scan-icon">⌕</span>
+      <span>Scan Current Page</span>
+    `;
   }
 });
 
+// Display detected fields and suggestions
 function displayResults(matches) {
   currentMatches = matches;
 
-  const fieldList = document.getElementById("field-list");
-  const fieldCount = document.getElementById("field-count");
-  const fillButton = document.getElementById("fill-button");
-
-  if (!fieldList) {
-    console.error("FormPilot: #field-list element not found.");
-    return;
-  }
-
   fieldList.innerHTML = "";
 
-  if (fieldCount) {
-    fieldCount.textContent = `Detected Fields: ${matches.length}`;
-  }
+  const matchedCount = matches.filter(
+    result => Boolean(result.match)
+  ).length;
+
+  fieldCount.textContent =
+    `${matchedCount} of ${matches.length} fields have matches`;
 
   matches.forEach((result, index) => {
     const container = document.createElement("div");
-    container.className = "field-result";
+
+    container.className = result.match
+      ? "field-result matched"
+      : "field-result";
 
     const label = document.createElement("label");
 
@@ -90,31 +98,55 @@ function displayResults(matches) {
     checkbox.disabled = !result.match;
 
     const content = document.createElement("div");
+    content.className = "field-content";
+
+    const top = document.createElement("div");
+    top.className = "field-top";
 
     const title = document.createElement("strong");
+
     title.textContent =
       result.field.label ||
       result.field.name ||
       result.field.id ||
       `Field ${index + 1}`;
 
-    const details = document.createElement("p");
-    details.textContent = `${result.field.type} · ${result.field.name || "Unnamed field"}`;
+    const type = document.createElement("span");
+    type.className = "field-type";
+    type.textContent = result.field.type;
 
-    content.append(title, details);
+    top.append(title, type);
+
+    const details = document.createElement("p");
+    details.className = "field-meta";
+    details.textContent =
+      result.field.name || result.field.id || "Unnamed field";
+
+    content.append(top, details);
 
     if (result.match) {
-      const suggestion = document.createElement("p");
-      suggestion.textContent = `Suggested: ${result.match.value} (${result.match.source})`;
+      const suggestion = document.createElement("div");
+      suggestion.className = "suggested-value";
+
+      const suggestionLabel = document.createElement("span");
+      suggestionLabel.textContent = `Suggested · ${result.match.source}`;
+
+      const suggestionValue = document.createElement("div");
+      suggestionValue.textContent = result.match.value;
+
+      suggestion.append(suggestionLabel, suggestionValue);
 
       const confidence = document.createElement("p");
       confidence.className = "match-confidence";
-      confidence.textContent = `${result.confidence}% confidence`;
+      confidence.textContent = `✓ ${result.confidence}% confidence`;
 
       content.append(suggestion, confidence);
+
     } else {
       const noMatch = document.createElement("p");
+      noMatch.className = "no-match";
       noMatch.textContent = "No matching information found.";
+
       content.append(noMatch);
     }
 
@@ -123,34 +155,29 @@ function displayResults(matches) {
     fieldList.append(container);
   });
 
-  if (fillButton) {
-    fillButton.hidden = !matches.some((result) => result.match);
-  }
+  fillButton.hidden = matchedCount === 0;
 }
 
-dashboardButton.addEventListener("click", () => {
-  chrome.runtime.openOptionsPage();
-});
-document.getElementById("fill-button").addEventListener("click", async () => {
-  const fillButton = document.getElementById("fill-button");
-  const status = document.getElementById("scan-status");
-
+// Fill selected fields
+fillButton.addEventListener("click", async () => {
   const selectedIndexes = [
-    ...document.querySelectorAll('#field-list input[type="checkbox"]:checked'),
-  ].map((checkbox) => Number(checkbox.value));
+    ...document.querySelectorAll(
+      '#field-list input[type="checkbox"]:checked'
+    ),
+  ].map(checkbox => Number(checkbox.value));
 
   const selectedMatches = selectedIndexes
-    .map((index) => currentMatches[index])
-    .filter((result) => result?.match);
+    .map(index => currentMatches[index])
+    .filter(result => result?.match);
 
   if (!selectedMatches.length) {
-    status.textContent = "Select at least one matched field.";
+    scanStatus.textContent = "Select at least one matched field.";
     return;
   }
 
   fillButton.disabled = true;
   fillButton.textContent = "Filling...";
-  status.textContent = "Applying selected values...";
+  scanStatus.textContent = "Applying selected values...";
 
   try {
     const [tab] = await chrome.tabs.query({
@@ -162,7 +189,6 @@ document.getElementById("fill-button").addEventListener("click", async () => {
       throw new Error("No active tab found.");
     }
 
-    // Inject the autofill listener into the webpage.
     await chrome.scripting.executeScript({
       target: { tabId: tab.id },
       files: ["content/autofill.js"],
@@ -179,13 +205,23 @@ document.getElementById("fill-button").addEventListener("click", async () => {
 
     const { filled, skipped, failed } = response.results;
 
-    status.textContent = `Filled: ${filled} · Skipped: ${skipped} · Failed: ${failed}`;
+    scanStatus.textContent =
+      `Filled: ${filled} · Skipped: ${skipped} · Failed: ${failed}`;
 
-    fillButton.textContent = "Fill Selected Fields";
   } catch (error) {
     console.error("FormPilot autofill error:", error);
-    status.textContent = error.message;
+    scanStatus.textContent = error.message;
+
   } finally {
     fillButton.disabled = false;
+    fillButton.innerHTML = `
+      Fill Selected Fields
+      <span>→</span>
+    `;
   }
+});
+
+// Open dashboard
+dashboardButton.addEventListener("click", () => {
+  chrome.runtime.openOptionsPage();
 });

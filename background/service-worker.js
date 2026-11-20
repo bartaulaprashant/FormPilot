@@ -1,4 +1,3 @@
-
 import { openDatabase } from "../database/db.js";
 import { getProfile } from "../database/repositories/profile.repository.js";
 import { educationRepository } from "../database/repositories/education.repository.js";
@@ -24,33 +23,38 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       experience,
       skills,
       certifications,
-      customFields
+      customFields,
     ] = await Promise.all([
       getProfile(),
       educationRepository.getAll(),
       experienceRepository.getAll(),
       skillsRepository.getAll(),
       certificationsRepository.getAll(),
-      customFieldsRepository.getAll()
+      customFieldsRepository.getAll(),
     ]);
 
     const data = {
-      profile: profile || {},
+      profile: {
+        ...(profile || {}),
+        fullName: [profile?.firstName, profile?.middleName, profile?.lastName]
+          .filter((name) => name?.trim())
+          .join(" "),
+      },
       education,
       experience,
       skills,
       certifications,
-      customFields
+      customFields,
     };
 
     return matchFields(message.fields, data);
   })()
-    .then(matches => sendResponse({ success: true, matches }))
-    .catch(error => {
+    .then((matches) => sendResponse({ success: true, matches }))
+    .catch((error) => {
       console.error("Field matching failed:", error);
       sendResponse({
         success: false,
-        error: error.message
+        error: error.message,
       });
     });
 
