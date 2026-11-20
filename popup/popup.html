@@ -1,34 +1,33 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FormPilot</title>
-  <link rel="stylesheet" href="popup.css">
-</head>
-<body>
-  <main class="popup">
-    <header>
-      <h1>FormPilot</h1>
-      <p>Your personal autofill assistant</p>
-    </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FormPilot</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="popup">
+      <header>
+        <h1>FormPilot</h1>
+        <p>Your personal autofill assistant</p>
+      </header>
 
-    <button id="scan-button">Scan Current Page</button>
+      <button id="scan-button">Scan Current Page</button>
 
-    <p id="scan-status" role="status"></p>
+      <p id="scan-status" role="status"></p>
 
-    <section id="results-section" hidden>
-      <h2>Detected Fields</h2>
-      <p id="field-count"></p>
-      <div id="field-list"></div>
-    </section>
+      <section id="results-section" hidden>
+        <h2>Detected Fields</h2>
+        <div id="field-count"></div>
+        <div id="field-list"></div>
 
-    <button id="dashboard-button" class="secondary">
-      Open Dashboard
-    </button>
-  </main>
+        <button id="fill-button" hidden>Fill Selected Fields</button>
+      </section>
 
-  <script type="module" src="popup.js"></script>
-</body>
+      <button id="dashboard-button" class="secondary">Open Dashboard</button>
+    </main>
+
+    <script type="module" src="popup.js"></script>
+  </body>
 </html>

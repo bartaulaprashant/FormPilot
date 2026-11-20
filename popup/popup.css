@@ -96,3 +96,60 @@ button:disabled {
   font-size: 11px;
   overflow-wrap: anywhere;
 }
+
+.fill-button {
+  width: 100%;
+  margin-top: 16px;
+  padding: 12px;
+  border: none;
+  border-radius: 7px;
+  background: #776b5d;
+  color: white;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.fill-button:hover {
+  background: #65594d;
+}
+
+.fill-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.field-result {
+  padding: 12px;
+  margin-bottom: 10px;
+  border: 1px solid #e1e1e1;
+  border-radius: 7px;
+}
+
+.field-result label {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  cursor: pointer;
+}
+
+.field-result input[type="checkbox"] {
+  margin-top: 4px;
+  accent-color: #776b5d;
+}
+
+.field-result strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.field-result p {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: #666;
+}
+
+.match-confidence {
+  color: #776b5d;
+  font-weight: 600;
+}
